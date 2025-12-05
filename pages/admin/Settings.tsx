@@ -54,7 +54,7 @@ export const Settings: React.FC = () => {
                                 name="systemName"
                                 value={formData.systemName}
                                 onChange={handleChange}
-                                className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                                className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500/20 text-slate-900"
                             />
                         </div>
                         <div>
@@ -64,7 +64,7 @@ export const Settings: React.FC = () => {
                                 name="contactEmail"
                                 value={formData.contactEmail}
                                 onChange={handleChange}
-                                className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                                className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500/20 text-slate-900"
                             />
                         </div>
                     </div>

@@ -38,6 +38,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onLogout }) => {
           { to: '/patient/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
           { to: '/patient/find-doctor', icon: Stethoscope, label: 'Find Doctor' },
           { to: '/patient/history', icon: Calendar, label: 'My Appointments' },
+          { to: '/patient/profile', icon: UserIcon, label: 'My Profile' },
         ];
       case UserRole.DOCTOR:
         return [

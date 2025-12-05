@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Search, MapPin, Star, Filter, CalendarCheck, X } from 'lucide-react';
-import { Doctor, User, Appointment } from '../../types';
+import { Search, MapPin, Star, Filter, CalendarCheck, X, Clock } from 'lucide-react';
+import { Doctor, User } from '../../types';
 import { getDoctors, bookAppointment } from '../../services/mockData';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,8 +9,12 @@ export const FindDoctor: React.FC<{ user: User }> = ({ user }) => {
   const [filteredDoctors, setFilteredDoctors] = useState<Doctor[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [specialization, setSpecialization] = useState('All');
+  
+  // Booking states
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+  const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [bookingLoading, setBookingLoading] = useState(false);
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,8 +38,8 @@ export const FindDoctor: React.FC<{ user: User }> = ({ user }) => {
     setFilteredDoctors(result);
   }, [searchTerm, specialization, doctors]);
 
-  const handleBook = async (slot: string) => {
-    if (!selectedDoctor) return;
+  const handleBook = async () => {
+    if (!selectedDoctor || !selectedSlot) return;
     setBookingLoading(true);
     try {
         await bookAppointment({
@@ -43,17 +47,22 @@ export const FindDoctor: React.FC<{ user: User }> = ({ user }) => {
             patientName: user.name,
             doctorId: selectedDoctor.id,
             doctorName: selectedDoctor.name,
-            date: new Date().toISOString(), // Mocking today
-            time: slot
+            date: new Date().toISOString().split('T')[0], // Mocking today's date
+            time: selectedSlot
         });
         alert('Appointment booked successfully!');
-        setSelectedDoctor(null);
-        navigate('/patient/dashboard');
+        closeBookingModal();
+        navigate('/patient/history'); // Navigate to history to see the new booking
     } catch (e) {
         alert('Error booking appointment');
     } finally {
         setBookingLoading(false);
     }
+  };
+
+  const closeBookingModal = () => {
+      setSelectedDoctor(null);
+      setSelectedSlot(null);
   };
 
   const specializations = ['All', ...Array.from(new Set(doctors.map(d => d.specialization)))];
@@ -120,7 +129,7 @@ export const FindDoctor: React.FC<{ user: User }> = ({ user }) => {
 
             <button 
                 onClick={() => setSelectedDoctor(doctor)}
-                className="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
+                className="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-medium transition-colors flex items-center justify-center gap-2 shadow-lg shadow-teal-600/20"
             >
                 <CalendarCheck size={18} /> Book Appointment
             </button>
@@ -136,11 +145,11 @@ export const FindDoctor: React.FC<{ user: User }> = ({ user }) => {
 
       {/* Booking Modal */}
       {selectedDoctor && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-3xl max-w-lg w-full p-6 relative">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="bg-white rounded-3xl max-w-lg w-full p-6 relative transform transition-all scale-100 shadow-2xl">
                 <button 
-                    onClick={() => setSelectedDoctor(null)}
-                    className="absolute right-6 top-6 text-slate-400 hover:text-slate-600"
+                    onClick={closeBookingModal}
+                    className="absolute right-6 top-6 text-slate-400 hover:text-slate-600 transition-colors"
                 >
                     <X size={24} />
                 </button>
@@ -149,14 +158,28 @@ export const FindDoctor: React.FC<{ user: User }> = ({ user }) => {
                 <p className="text-slate-500 mb-6">Select a time slot for <span className="font-semibold text-slate-800">{selectedDoctor.name}</span></p>
                 
                 <div className="space-y-4">
-                    <h3 className="text-sm font-semibold text-slate-700">Available Slots (Today)</h3>
+                    <div className="flex items-center justify-between">
+                         <h3 className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                            <Clock size={16} className="text-teal-600" />
+                            Available Slots (Today)
+                         </h3>
+                         {selectedSlot && (
+                             <span className="text-xs font-medium text-teal-600 bg-teal-50 px-2 py-1 rounded-full border border-teal-100">
+                                Selected: {selectedSlot}
+                             </span>
+                         )}
+                    </div>
+                   
                     <div className="grid grid-cols-3 gap-3">
                         {selectedDoctor.availableSlots.map(slot => (
                             <button 
                                 key={slot}
-                                onClick={() => handleBook(slot)}
-                                disabled={bookingLoading}
-                                className="py-2 px-4 rounded-lg border border-teal-200 text-teal-700 hover:bg-teal-50 hover:border-teal-500 transition-all text-sm font-medium focus:ring-2 focus:ring-teal-500 focus:bg-teal-100"
+                                onClick={() => setSelectedSlot(slot)}
+                                className={`py-3 px-4 rounded-xl border text-sm font-medium transition-all duration-200
+                                    ${selectedSlot === slot 
+                                        ? 'bg-teal-600 border-teal-600 text-white shadow-md transform scale-105' 
+                                        : 'border-slate-200 text-slate-600 hover:border-teal-400 hover:text-teal-600 hover:bg-teal-50'}
+                                `}
                             >
                                 {slot}
                             </button>
@@ -164,8 +187,24 @@ export const FindDoctor: React.FC<{ user: User }> = ({ user }) => {
                     </div>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-slate-100 flex justify-end">
-                    <button onClick={() => setSelectedDoctor(null)} className="text-slate-500 font-medium px-4 hover:underline">Cancel</button>
+                <div className="mt-8 pt-6 border-t border-slate-100 flex gap-4">
+                    <button 
+                        onClick={closeBookingModal} 
+                        className="flex-1 py-3 px-4 border border-slate-200 text-slate-600 font-medium rounded-xl hover:bg-slate-50 transition-colors"
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        onClick={handleBook}
+                        disabled={!selectedSlot || bookingLoading}
+                        className="flex-1 py-3 px-4 bg-teal-600 text-white font-medium rounded-xl hover:bg-teal-700 transition-colors shadow-lg shadow-teal-600/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                        {bookingLoading ? (
+                            <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                            <>Confirm Booking <CalendarCheck size={18} /></>
+                        )}
+                    </button>
                 </div>
             </div>
         </div>

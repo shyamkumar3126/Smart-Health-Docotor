@@ -159,6 +159,15 @@ export const bookAppointment = async (appointment: Omit<Appointment, 'id' | 'sta
     return newApp;
 };
 
+export const cancelAppointment = async (id: string): Promise<void> => {
+    await delay(500);
+    const storedApps = localStorage.getItem('appointments');
+    const apps: Appointment[] = storedApps ? JSON.parse(storedApps) : INITIAL_APPOINTMENTS;
+    
+    const updatedApps = apps.map(a => a.id === id ? { ...a, status: 'CANCELLED' } : a);
+    localStorage.setItem('appointments', JSON.stringify(updatedApps));
+};
+
 export const updateAppointmentStatus = async (id: string, status: Appointment['status']): Promise<void> => {
     await delay(500);
     const storedApps = localStorage.getItem('appointments');

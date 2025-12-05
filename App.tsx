@@ -5,6 +5,8 @@ import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { PatientDashboard } from './pages/patient/PatientDashboard';
 import { FindDoctor } from './pages/patient/FindDoctor';
+import { AppointmentHistory } from './pages/patient/AppointmentHistory';
+import { PatientProfile } from './pages/patient/PatientProfile';
 import { DoctorDashboard } from './pages/doctor/DoctorDashboard';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { UserManagement } from './pages/admin/UserManagement';
@@ -53,7 +55,11 @@ const App: React.FC = () => {
           />
            <Route 
             path="/patient/history" 
-            element={user?.role === UserRole.PATIENT ? <div className="text-center mt-20 text-slate-500">History Module Placeholder</div> : <Navigate to="/login" />} 
+            element={user?.role === UserRole.PATIENT ? <AppointmentHistory user={user} /> : <Navigate to="/login" />} 
+          />
+           <Route 
+            path="/patient/profile" 
+            element={user?.role === UserRole.PATIENT ? <PatientProfile user={user} /> : <Navigate to="/login" />} 
           />
 
           {/* Doctor Routes */}
