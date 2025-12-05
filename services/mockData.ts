@@ -167,3 +167,10 @@ export const updateAppointmentStatus = async (id: string, status: Appointment['s
     const updatedApps = apps.map(a => a.id === id ? { ...a, status } : a);
     localStorage.setItem('appointments', JSON.stringify(updatedApps));
 };
+
+export const updateSystemSettings = async (settings: any): Promise<void> => {
+    await delay(1000);
+    // In a real app, this would save to a DB
+    console.log("Settings saved:", settings);
+    return;
+};

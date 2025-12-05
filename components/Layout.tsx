@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Stethoscope, Calendar, Settings, LogOut, Menu, User as UserIcon, Shield } from 'lucide-react';
+import { LayoutDashboard, Stethoscope, Calendar, Settings, LogOut, Menu, User as UserIcon, Shield, AlertCircle } from 'lucide-react';
 import { UserRole, User } from '../types';
 
 interface LayoutProps {
@@ -10,12 +10,26 @@ interface LayoutProps {
 }
 
 export const Layout: React.FC<LayoutProps> = ({ children, user, onLogout }) => {
-  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const location = useLocation();
 
   if (!user || location.pathname === '/login' || location.pathname === '/register') {
     return <>{children}</>;
   }
+
+  const handleLogoutClick = () => {
+    setShowLogoutConfirm(true);
+  };
+
+  const confirmLogout = () => {
+    setShowLogoutConfirm(false);
+    onLogout();
+  };
+
+  const cancelLogout = () => {
+      setShowLogoutConfirm(false);
+  };
 
   const getNavLinks = () => {
     switch (user.role) {
@@ -103,7 +117,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onLogout }) => {
           {/* Logout */}
           <div className="p-4 border-t border-slate-100">
             <button
-              onClick={onLogout}
+              onClick={handleLogoutClick}
               className="flex w-full items-center gap-3 px-4 py-3 text-sm font-medium text-red-600 rounded-xl hover:bg-red-50 transition-colors"
             >
               <LogOut size={20} />
@@ -138,6 +152,35 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onLogout }) => {
           </div>
         </main>
       </div>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden p-6 transform scale-100 transition-transform">
+                <div className="flex flex-col items-center text-center mb-6">
+                    <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center text-red-600 mb-4">
+                        <AlertCircle size={28} />
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-800">Sign Out</h3>
+                    <p className="text-slate-500 mt-2">Are you sure you want to sign out of your account?</p>
+                </div>
+                <div className="flex gap-3">
+                    <button 
+                        onClick={cancelLogout}
+                        className="flex-1 px-4 py-2.5 border border-slate-200 text-slate-600 rounded-xl font-medium hover:bg-slate-50 transition-colors"
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        onClick={confirmLogout}
+                        className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 transition-colors shadow-lg shadow-red-600/20"
+                    >
+                        Yes, Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+      )}
     </div>
   );
 };

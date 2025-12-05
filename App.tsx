@@ -8,6 +8,7 @@ import { FindDoctor } from './pages/patient/FindDoctor';
 import { DoctorDashboard } from './pages/doctor/DoctorDashboard';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { UserManagement } from './pages/admin/UserManagement';
+import { Settings } from './pages/admin/Settings';
 import { AIChat } from './components/AIChat';
 import { User, UserRole } from './types';
 
@@ -80,7 +81,7 @@ const App: React.FC = () => {
           />
            <Route 
             path="/admin/settings" 
-            element={user?.role === UserRole.ADMIN ? <div className="text-center mt-20 text-slate-500">Site Settings Placeholder</div> : <Navigate to="/login" />} 
+            element={user?.role === UserRole.ADMIN ? <Settings /> : <Navigate to="/login" />} 
           />
         </Routes>
         
