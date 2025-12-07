@@ -1,4 +1,4 @@
-import { User, Doctor, Appointment, UserRole } from '../types';
+import { User, Doctor, Appointment, UserRole, Medicine, LabTest, Clinic } from '../types';
 
 // Initial Data
 const INITIAL_DOCTORS: Doctor[] = [
@@ -85,90 +85,6 @@ const INITIAL_DOCTORS: Doctor[] = [
     bio: 'Expert in high-risk pregnancies, infertility treatments, and laparoscopic surgeries.',
     availableSlots: ['10:00 AM', '01:00 PM', '06:00 PM'],
     avatar: 'https://ui-avatars.com/api/?name=Meera+Reddy&background=DB2777&color=fff'
-  },
-  {
-    id: 'd7',
-    name: 'Dr. Amit Verma',
-    email: 'amit.verma@mediconnect.com',
-    role: UserRole.DOCTOR,
-    specialization: 'General Physician',
-    experience: 25,
-    fee: 500,
-    rating: 4.5,
-    location: 'Kolkata, WB',
-    bio: 'Family physician with extensive experience in managing diabetes, hypertension, and infectious diseases.',
-    availableSlots: ['09:00 AM', '11:00 AM', '07:00 PM'],
-    avatar: 'https://ui-avatars.com/api/?name=Amit+Verma&background=059669&color=fff'
-  },
-  {
-    id: 'd8',
-    name: 'Dr. Anjali Desai',
-    email: 'anjali.desai@mediconnect.com',
-    role: UserRole.DOCTOR,
-    specialization: 'Psychiatrist',
-    experience: 9,
-    fee: 1500,
-    rating: 4.9,
-    location: 'Mumbai, MH',
-    bio: 'Mental health advocate specializing in anxiety disorders, depression, and cognitive behavioral therapy.',
-    availableSlots: ['02:00 PM', '03:00 PM', '04:00 PM'],
-    avatar: 'https://ui-avatars.com/api/?name=Anjali+Desai&background=7C3AED&color=fff'
-  },
-  {
-    id: 'd9',
-    name: 'Dr. Mohammed Khan',
-    email: 'mohammed.khan@mediconnect.com',
-    role: UserRole.DOCTOR,
-    specialization: 'ENT Specialist',
-    experience: 11,
-    fee: 800,
-    rating: 4.6,
-    location: 'Lucknow, UP',
-    bio: 'Specialist in ear, nose, and throat disorders, sinus surgeries, and hearing loss management.',
-    availableSlots: ['10:30 AM', '12:30 PM', '05:30 PM'],
-    avatar: 'https://ui-avatars.com/api/?name=Mohammed+Khan&background=2563EB&color=fff'
-  },
-  {
-    id: 'd10',
-    name: 'Dr. Rohan Joshi',
-    email: 'rohan.joshi@mediconnect.com',
-    role: UserRole.DOCTOR,
-    specialization: 'Dentist',
-    experience: 7,
-    fee: 400,
-    rating: 4.7,
-    location: 'Ahmedabad, GJ',
-    bio: 'Cosmetic dentist focusing on smile makeovers, implants, and root canal treatments.',
-    availableSlots: ['09:00 AM', '05:00 PM', '06:00 PM'],
-    avatar: 'https://ui-avatars.com/api/?name=Rohan+Joshi&background=CA8A04&color=fff'
-  },
-  {
-    id: 'd11',
-    name: 'Dr. Kavita Nair',
-    email: 'kavita.nair@mediconnect.com',
-    role: UserRole.DOCTOR,
-    specialization: 'Ophthalmologist',
-    experience: 16,
-    fee: 900,
-    rating: 4.8,
-    location: 'Kochi, KL',
-    bio: 'Eye surgeon specializing in cataract surgery, LASIK, and glaucoma management.',
-    availableSlots: ['08:30 AM', '11:00 AM', '03:30 PM'],
-    avatar: 'https://ui-avatars.com/api/?name=Kavita+Nair&background=0891B2&color=fff'
-  },
-  {
-    id: 'd12',
-    name: 'Dr. Suresh Menon',
-    email: 'suresh.menon@mediconnect.com',
-    role: UserRole.DOCTOR,
-    specialization: 'Endocrinologist',
-    experience: 20,
-    fee: 1400,
-    rating: 4.9,
-    location: 'Thiruvananthapuram, KL',
-    bio: 'Expert in diabetes management, thyroid disorders, and hormonal imbalances.',
-    availableSlots: ['10:00 AM', '12:00 PM', '02:00 PM'],
-    avatar: 'https://ui-avatars.com/api/?name=Suresh+Menon&background=DC2626&color=fff'
   }
 ];
 
@@ -180,7 +96,6 @@ const INITIAL_PATIENTS: User[] = [
 
 const ADMIN_USER: User = { id: 'admin1', name: 'System Admin', email: 'admin@mediconnect.com', role: UserRole.ADMIN, avatar: 'https://ui-avatars.com/api/?name=System+Admin&background=1e293b&color=fff' };
 
-// In-memory store for the session
 let MOCK_USERS: User[] = [...INITIAL_DOCTORS, ...INITIAL_PATIENTS, ADMIN_USER];
 
 const INITIAL_APPOINTMENTS: Appointment[] = [
@@ -196,20 +111,57 @@ const INITIAL_APPOINTMENTS: Appointment[] = [
   }
 ];
 
-// Helper to simulate delay
+// --- New Mock Data ---
+
+const MOCK_MEDICINES: Medicine[] = [
+    { id: 'm1', name: 'Paracetamol', category: 'Pain Relief', price: 50, description: 'Pain reliever and fever reducer' },
+    { id: 'm2', name: 'Amoxicillin', category: 'Antibiotics', price: 120, description: 'Antibiotic for bacterial infections' },
+    { id: 'm3', name: 'Ibuprofen', category: 'Pain Relief', price: 80, description: 'Anti-inflammatory painkiller' },
+    { id: 'm4', name: 'Vitamin D3', category: 'Supplements', price: 200, description: 'Supplement for bone health' },
+    { id: 'm5', name: 'Omeprazole', category: 'Digestive Health', price: 150, description: 'For acid reflux and ulcers' },
+    { id: 'm6', name: 'Cetirizine', category: 'Allergy', price: 40, description: 'Relief from allergy symptoms' },
+];
+
+const MOCK_LAB_TESTS: LabTest[] = [
+    { id: 'l1', name: 'Complete Blood Count (CBC)', category: 'Blood Tests', price: 500, description: 'Comprehensive blood test', homePickup: true },
+    { id: 'l2', name: 'Lipid Profile', category: 'Cardiac Tests', price: 800, description: 'Cholesterol and lipid levels', homePickup: true },
+    { id: 'l3', name: 'Thyroid Function Test', category: 'Hormone Tests', price: 600, description: 'TSH, T3, T4 levels', homePickup: true },
+    { id: 'l4', name: 'Blood Sugar Test', category: 'Diabetes Tests', price: 300, description: 'Fasting glucose levels', homePickup: true },
+    { id: 'l5', name: 'X-Ray Chest', category: 'Imaging', price: 1000, description: 'Chest X-ray for respiratory issues', homePickup: false },
+    { id: 'l6', name: 'MRI Scan', category: 'Imaging', price: 5000, description: 'Detailed imaging of body structures', homePickup: false },
+];
+
+const MOCK_CLINICS: Clinic[] = [
+    { 
+        id: 'c1', name: 'City General Hospital', type: 'HOSPITAL', rating: 4.8, 
+        address: 'Mumbai Central', distance: '2.5km away', 
+        phone: '+91 9876543210', specialties: ['Cardiology', 'Neurology', 'Orthopedics'], openHours: '24/7'
+    },
+    { 
+        id: 'c2', name: 'Delhi Skin Care Clinic', type: 'CLINIC', rating: 4.6, 
+        address: 'Connaught Place, Delhi', distance: '1.8km away', 
+        phone: '+91 9876543211', specialties: ['Dermatology'], openHours: '9 AM - 8 PM'
+    },
+    { 
+        id: 'c3', name: 'Bangalore Children\'s Hospital', type: 'HOSPITAL', rating: 4.9, 
+        address: 'Jayanagar, Bangalore', distance: '3.2km away', 
+        phone: '+91 9876543212', specialties: ['Pediatrics', 'Neonatology'], openHours: '24/7'
+    },
+    { 
+        id: 'c4', name: 'Sunrise Dental Care', type: 'CLINIC', rating: 4.5, 
+        address: 'Koramangala, Bangalore', distance: '5.0km away', 
+        phone: '+91 9876543213', specialties: ['Dentistry', 'Orthodontics'], openHours: '10 AM - 9 PM'
+    }
+];
+
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // --- Auth Services ---
 
 export const loginUser = async (email: string, role: UserRole): Promise<User> => {
   await delay(800);
-  
-  // Find user in our mock DB
   const user = MOCK_USERS.find(u => u.email === email && u.role === role);
-  
   if (user) return user;
-
-  // Fallback for demo login if specific email not matched but role is valid
   if (role === UserRole.DOCTOR) return INITIAL_DOCTORS[0];
   if (role === UserRole.ADMIN) return ADMIN_USER;
   return INITIAL_PATIENTS[0];
@@ -276,12 +228,10 @@ export const bookAppointment = async (appointment: Omit<Appointment, 'id' | 'sta
         id: `apt_${Math.random().toString(36).substr(2, 9)}`,
         status: 'PENDING'
     };
-    
     const storedApps = localStorage.getItem('appointments');
     const apps: Appointment[] = storedApps ? JSON.parse(storedApps) : INITIAL_APPOINTMENTS;
     const updatedApps = [...apps, newApp];
     localStorage.setItem('appointments', JSON.stringify(updatedApps));
-    
     return newApp;
 };
 
@@ -289,7 +239,6 @@ export const cancelAppointment = async (id: string): Promise<void> => {
     await delay(500);
     const storedApps = localStorage.getItem('appointments');
     const apps: Appointment[] = storedApps ? JSON.parse(storedApps) : INITIAL_APPOINTMENTS;
-    
     const updatedApps = apps.map(a => a.id === id ? { ...a, status: 'CANCELLED' } : a);
     localStorage.setItem('appointments', JSON.stringify(updatedApps));
 };
@@ -298,14 +247,28 @@ export const updateAppointmentStatus = async (id: string, status: Appointment['s
     await delay(500);
     const storedApps = localStorage.getItem('appointments');
     const apps: Appointment[] = storedApps ? JSON.parse(storedApps) : INITIAL_APPOINTMENTS;
-    
     const updatedApps = apps.map(a => a.id === id ? { ...a, status } : a);
     localStorage.setItem('appointments', JSON.stringify(updatedApps));
 };
 
 export const updateSystemSettings = async (settings: any): Promise<void> => {
     await delay(1000);
-    // In a real app, this would save to a DB
     console.log("Settings saved:", settings);
     return;
+};
+
+// --- New Getters ---
+export const getMedicines = async (): Promise<Medicine[]> => {
+    await delay(500);
+    return MOCK_MEDICINES;
+};
+
+export const getLabTests = async (): Promise<LabTest[]> => {
+    await delay(500);
+    return MOCK_LAB_TESTS;
+};
+
+export const getClinics = async (): Promise<Clinic[]> => {
+    await delay(500);
+    return MOCK_CLINICS;
 };

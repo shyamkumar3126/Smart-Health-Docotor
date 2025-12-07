@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Stethoscope, Calendar, Settings, LogOut, Menu, User as UserIcon, Shield, AlertCircle } from 'lucide-react';
+import { LayoutDashboard, Stethoscope, Calendar, Settings, LogOut, Menu, User as UserIcon, Shield, AlertCircle, Pill, FlaskConical, Video, Building2 } from 'lucide-react';
 import { UserRole, User } from '../types';
 
 interface LayoutProps {
@@ -38,6 +38,11 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onLogout }) => {
           { to: '/patient/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
           { to: '/patient/find-doctor', icon: Stethoscope, label: 'Find Doctor' },
           { to: '/patient/history', icon: Calendar, label: 'My Appointments' },
+          { to: '/patient/lab-tests', icon: FlaskConical, label: 'Lab Tests' },
+          { to: '/patient/online-consult', icon: Video, label: 'Online Consult' },
+          { to: '/patient/medicines', icon: Pill, label: 'Medicine Order' },
+          { to: '/patient/health-records', icon: Shield, label: 'Health Records' }, // Kept for completeness if implemented later or reusing PatientProfile
+          { to: '/patient/clinics', icon: Building2, label: 'Clinic Finder' },
           { to: '/patient/profile', icon: UserIcon, label: 'My Profile' },
         ];
       case UserRole.DOCTOR:
@@ -96,7 +101,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onLogout }) => {
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          <nav className="flex-1 p-4 space-y-1 overflow-y-auto scrollbar-hide">
             {getNavLinks().map((link) => (
               <NavLink
                 key={link.to}

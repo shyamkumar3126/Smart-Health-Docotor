@@ -7,6 +7,10 @@ import { PatientDashboard } from './pages/patient/PatientDashboard';
 import { FindDoctor } from './pages/patient/FindDoctor';
 import { AppointmentHistory } from './pages/patient/AppointmentHistory';
 import { PatientProfile } from './pages/patient/PatientProfile';
+import { MedicineOrdering } from './pages/patient/MedicineOrdering';
+import { LabTests } from './pages/patient/LabTests';
+import { OnlineConsult } from './pages/patient/OnlineConsult';
+import { ClinicFinder } from './pages/patient/ClinicFinder';
 import { DoctorDashboard } from './pages/doctor/DoctorDashboard';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { UserManagement } from './pages/admin/UserManagement';
@@ -59,6 +63,27 @@ const App: React.FC = () => {
           />
            <Route 
             path="/patient/profile" 
+            element={user?.role === UserRole.PATIENT ? <PatientProfile user={user} /> : <Navigate to="/login" />} 
+          />
+          {/* New Patient Routes */}
+          <Route 
+            path="/patient/medicines" 
+            element={user?.role === UserRole.PATIENT ? <MedicineOrdering /> : <Navigate to="/login" />} 
+          />
+          <Route 
+            path="/patient/lab-tests" 
+            element={user?.role === UserRole.PATIENT ? <LabTests /> : <Navigate to="/login" />} 
+          />
+          <Route 
+            path="/patient/online-consult" 
+            element={user?.role === UserRole.PATIENT ? <OnlineConsult /> : <Navigate to="/login" />} 
+          />
+          <Route 
+            path="/patient/clinics" 
+            element={user?.role === UserRole.PATIENT ? <ClinicFinder /> : <Navigate to="/login" />} 
+          />
+           <Route 
+            path="/patient/health-records" 
             element={user?.role === UserRole.PATIENT ? <PatientProfile user={user} /> : <Navigate to="/login" />} 
           />
 

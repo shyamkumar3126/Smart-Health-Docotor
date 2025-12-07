@@ -1,5 +1,5 @@
 {
-  "name": "Copy of MediConnect - Smart Health Platform",
+  "name": "MediConnect - Smart Health Platform",
   "description": "A comprehensive React-based medical appointment system featuring distinct portals for Patients, Doctors, and Admins. Includes real-time doctor search, appointment booking management, dashboard analytics, and an AI-powered health assistant using Gemini.",
   "requestFramePermissions": [
     "microphone"

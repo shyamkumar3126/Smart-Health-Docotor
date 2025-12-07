@@ -6,9 +6,6 @@ export const getHealthAdvice = async (history: {role: 'user' | 'model', text: st
   try {
     const model = 'gemini-2.5-flash';
     
-    // Convert history format to what Gemini expects roughly, or just use sendMessage with history if using chat session.
-    // For simplicity in this stateless utility, we'll use generateContent with system instruction.
-    
     const prompt = `
       User History: ${JSON.stringify(history)}
       Current Question: ${message}

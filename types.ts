@@ -47,3 +47,35 @@ export interface ChatMessage {
   role: 'user' | 'model';
   text: string;
 }
+
+// New Types for Modules
+export interface Medicine {
+  id: string;
+  name: string;
+  category: string;
+  price: number;
+  description: string;
+  image?: string;
+}
+
+export interface LabTest {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  homePickup: boolean;
+}
+
+export interface Clinic {
+  id: string;
+  name: string;
+  type: 'HOSPITAL' | 'CLINIC';
+  rating: number;
+  address: string;
+  distance: string;
+  image?: string;
+  specialties: string[];
+  openHours: string;
+  phone: string;
+}
